@@ -5,10 +5,8 @@
 		//Datos para la conexion a la base de datos
 		private $con;
 		private $dbhost="localhost";
-		//private $dbuser="root";
-		private $dbuser="halfonso";
-		//private $dbpass="";
-		private $dbpass="bluetooth1";
+		private $dbuser="root";
+		private $dbpass="";
 		private $dbname="hotel";
 		function __construct(){
 			$this->connect_db();
@@ -44,29 +42,46 @@
 			}
 		}
 
+		//Funcion para realizar el registro de un nuevo cliente a la base de datos, esta funcion tiene como parametros los datos del cliente que se llena en el formulario
+		public function create_cliente($nombre,$email,$telefono){
+			$sql = "Insert into clientes (nombre,telefono,email,visitas) values('" . $nombre ."','" . $telefono . "','" . $email . "','1')";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
 		//Funcion para devolver todos los datos de una tabla en especifico, esto se mostraran en las tablas principales
 		//La tabla seleccionada es enviada por parametro
-		public function data_table($tabla){
-			$sql = "Select * From " . $tabla;
+		public function table_cliente(){
+			$sql = "Select * From clientes";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
   			//$return = $stmt->fetch();
   			return $stmt;
 		}
 
-		//Funcion para realizar el registro de un nuevo usuario a la base de datos, esta funcion tiene como parametros los datos del usuario que se llena en el formulario
-		public function create_user($nombre,$contrasenna,$telefono,$correo){
-			$sql = "Insert into usuarios (name,password,correo,telefono) values('" . $nombre ."','" . $contrasenna . "','" . $correo . "','" . $telefono . "')";
+		//Funcion para retornar solo un registro de la tabla, esto se utilizara para la actualizacion de datos, como parametro se pasa el id del registro que se desea modificar
+		public function one_cliente($id){
+			$sql = "Select nombre,telefono,email From clientes where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			$return = $stmt->fetch();
+  			return $return;
+		}
+
+		//Funcion para realizar la actualizacion de un cliente en especifico, se pasaran comom parametros todos los datos a actualizar
+		public function update_cliente($id,$nombre,$telefono,$email){
+			$sql = "Update clientes set nombre='" . $nombre . "',telefono='" . $telefono . "',email='" . $email . "' Where id='" . $id . "'";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
 		}
 
-		//Funcion para realizar el registro de un nuevo productos a la base de datos, esta funcion tiene como parametros los datos del producto
-		public function create_producto($nombre,$cantidad,$precio){
-			$sql = "Insert into productos (nombre,cantidad,precio) values('" . $nombre ."','" . $cantidad . "','" . $precio ."')";
+		//Funcion para eliminar un cliente en especifico, se pasa como parametro el id del cliente
+		public function delete_cliente($id){
+			$sql = "Delete from clientes Where id='" . $id . "'";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
 		}
+
 	}
 	
 	
