@@ -5,8 +5,8 @@
 		//Datos para la conexion a la base de datos
 		private $con;
 		private $dbhost="localhost";
-		private $dbuser="root";
-		private $dbpass="";
+		private $dbuser="halfonso";
+		private $dbpass="bluetooth1";
 		private $dbname="hotel";
 		function __construct(){
 			$this->connect_db();
