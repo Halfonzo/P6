@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-05-2019 a las 02:56:50
+-- Tiempo de generación: 26-05-2019 a las 03:38:02
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.4
 
@@ -21,6 +21,53 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `hotel`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clientes`
+--
+
+CREATE TABLE `clientes` (
+  `id` int(10) NOT NULL,
+  `nombre` varchar(40) NOT NULL,
+  `telefono` varchar(10) NOT NULL,
+  `email` varchar(20) NOT NULL,
+  `visitas` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `clientes`
+--
+
+INSERT INTO `clientes` (`id`, `nombre`, `telefono`, `email`, `visitas`) VALUES
+(3, 'Alfredo Cardenas', '8342325999', '1630065@upv.edu.mx', 1),
+(9, 'Halfonso Castro', '8342325999', '1729943@upv.edu.mx', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `habitaciones`
+--
+
+CREATE TABLE `habitaciones` (
+  `id` int(10) NOT NULL,
+  `tipo` varchar(12) NOT NULL,
+  `precio` float(7,2) NOT NULL,
+  `numero` varchar(5) NOT NULL,
+  `descripcion` varchar(150) NOT NULL,
+  `estado` varchar(12) NOT NULL,
+  `img` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `habitaciones`
+--
+
+INSERT INTO `habitaciones` (`id`, `tipo`, `precio`, `numero`, `descripcion`, `estado`, `img`) VALUES
+(1, 'Simple', 200.00, 'A101', 'Habitacion de una recamara, cuenta con baÃ±o completo y esta climatizada.', 'Disponible', 'assets/images/habitaciones/simple_01.jpg'),
+(3, 'Doble', 556.00, 'A103', 'Habitacion de una recamar con dos camas individuales, cuenta con baÃ±o completo y climatizaciÃ³n. ', 'Disponible', 'assets/images/habitaciones/doble_02.jpg'),
+(4, 'Matrimonial', 800.00, 'A102', 'Habitacion con cama matrimonial, cuneta con un baÃ±o completo y esta climatizada.', 'Disponible', 'assets/images/habitaciones/matrimonial_01.jpg');
 
 -- --------------------------------------------------------
 
@@ -48,6 +95,18 @@ INSERT INTO `usuarios` (`id`, `nick`, `password`, `Nombre`, `cargo`) VALUES
 --
 
 --
+-- Indices de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `habitaciones`
+--
+ALTER TABLE `habitaciones`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -56,6 +115,18 @@ ALTER TABLE `usuarios`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `habitaciones`
+--
+ALTER TABLE `habitaciones`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

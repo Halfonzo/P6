@@ -4,28 +4,40 @@
     $db = new Database();//Se instancia la clase para manejar la base de datos
 
 	//Cuando el usuario presione el boton de registrar, se llamara a la funcion para guardar los datos
-	if(isset($_POST['actualizarCliente'])){
+	if(isset($_POST['actualizarHabitacion'])){
 		//Obtenemos los datos ingresados
-		$nombre = $_POST['nombre'];
-		$email  = $_POST['email'];
-		$tel    = $_POST['telefono'];
+		$numero = $_POST['numero'];
+		$tipo   = $_POST['tipo'];
+		$precio = $_POST['precio'];
+		$desc   = $_POST['desc'];
 
-		//Llamamos a la funcion para actualizar los datos
-		$db->update_cliente($_GET['id'],$nombre,$tel,$email);
+		if(empty($_FILES['uploadedfile']['name'])){
+			//Llamamos a la funcion para actualizar los datos
+			$db->update_habitacion($_GET['id'],$tipo,$precio,$numero,$desc);
+		}
+		else{
+			//Proceso para guardar la imagen en el servidor
+			$target_path = "assets/images/habitaciones/";
+			$target_path = $target_path . basename($_FILES['uploadedfile']['name']); 
+			move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path);
+			//Llamamos a la funcion para actualizar los datos
+			$db->update_habitacion_img($_GET['id'],$tipo,$precio,$numero,$desc,$target_path);
+		}
+
 		//header("Location: index.php?action=clientes");//Se refresca la pagina para cargar el main
 		echo '<script type="text/javascript">
-                    window.location.replace("index.php?action=clientes");
-                  </script>';
+                    window.location.replace("index.php?action=habitaciones");
+                  </script>';/**/
 	}
 	if(isset($_POST['cancelar'])){//Condicion para salir del formulario
 		echo '<script type="text/javascript">
-                    window.location.replace("index.php?action=clientes");
+                    window.location.replace("index.php?action=habitaciones");
                   </script>';
 	}
 
 	//Se realiza la consulta del registro a modificar llamando a la funcion
 	//$data contiene la ifromacion del cliente solicitado
-	$data = $db->one($_GET['id'],"clientes");
+	$data = $db->one($_GET['id'],"habitaciones");
 	
 
 ?>
@@ -78,29 +90,53 @@
 	                                                    <div class="preview-elements">
 	                                                    	
 	                                                    	<!-- Empieza la construccion del formulario de clientes -->
-	                                                    	<form action = "" method = "post">
+	                                                    	<form action = "" method = "post" enctype="multipart/form-data" action="http://localhost/TAW/Practica6/index.php?action=habitaciones">
 
 	                                                    		<div class="form-row">
-	                                                    			<div class="form-group col-md-12">
-															            <input name="nombre" type="text" class="form-control" id="inputNombre" placeholder="Nombre completo" value="<?php echo $data[1] ?>">
-															            <label for="inputNombre" class="col-form-label">Nombre</label>
+
+	                                                    			<div class="form-group col-md-4">
+															            <input name="numero" type="text" class="form-control" id="inputNumero" placeholder="Ej. A101" value="<?php echo $data[3] ?>">
+															            <label for="inputNumero" class="col-form-label">Numero</label>
 															        </div>
+
+															        <div class="form-group col-md-4">
+																        <label for="Select1">Tipo</label>
+																        <select name="tipo" class="form-control" id="Select1">
+																            <option <?php if($data[1]=='Simple'){echo 'selected';} ?>>Simple</option>
+																            <option <?php if($data[1]=='Doble'){echo 'selected';} ?>>Doble</option>
+																            <option <?php if($data[1]=='Matrimonial'){echo 'selected';} ?>>Matrimonial</option>
+																        </select>
+																    </div>
+
+																    <div class="form-group col-md-4">
+															            <input name="precio" type="number" step="any" class="form-control" id="inputPrecio" placeholder="Ej. 550.99" value="<?php echo $data[2] ?>">
+															            <label for="inputPrecio" class="col-form-label">Precio</label>
+															        </div>
+
 	                                                    		</div>
 
 															    <div class="form-row">
-															        <div class="form-group col-md-6">
-															            <input name="email" type="email" class="form-control" id="inputEmail" placeholder="Email" value="<?php echo $data[3] ?>">
-															            <label for="inputEmail" class="col-form-label">Email</label>
-															        </div>
-															        <div class="form-group col-md-6">
-															            <input name="telefono" type="text" class="form-control" id="inputTelefono" placeholder="Telefono" value="<?php echo $data[2] ?>">
-															            <label for="inputTelefono" class="col-form-label">Telefono</label>
-															        </div>
+
+															        <div class="form-group col-md-12">
+																        <textarea name="desc" class="form-control" id="Textarea1" rows="1"><?php echo $data[4] ?></textarea>
+																        <label for="Textarea1">&nbsp;&nbsp;Descripción</label>
+																    </div>
+
 															    </div>
 
-															    <button type="submit" name="actualizarCliente" class="btn btn-primary">Guardar</button>
+															    <div class="form-row">
+															    	<div class="form-group col-md-6">
+																			<input class="btn btn-primary" name="uploadedfile" type="file" />
+															    	</div>
+															    	<div class="form-group col-md-6">
+															    		<font size="1">*Si no selecciona una nueva imagen, se mantendra la antigua por defecto.</font>
+															    	</div>
+															    </div>
+
+															    <button type="submit" name="actualizarHabitacion" class="btn btn-primary">Guardar</button>
 															    &nbsp;&nbsp;&nbsp;&nbsp;
 															    <button type="submit" name="cancelar" class="btn btn-primary">Cancelar</button>
+
 															</form>
 	                                                    	<!-- Termina la construccion del formulario del cliente-->
 

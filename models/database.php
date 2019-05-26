@@ -49,10 +49,17 @@
   			$stmt->execute();
 		}
 
+		//Funcion para realizar el registro de una nueva habitacion en la base de datos, esta funcion tiene como parametros los datos de la habitacion
+		public function create_habitacion($numero,$tipo,$precio,$desc,$img){
+			$sql = "Insert into habitaciones (tipo,precio,numero,descripcion,estado,img) values('" . $tipo ."','" . $precio . "','" . $numero . "','" . $desc . "','Disponible','" . $img . "')";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
 		//Funcion para devolver todos los datos de una tabla en especifico, esto se mostraran en las tablas principales
 		//La tabla seleccionada es enviada por parametro
-		public function table_cliente(){
-			$sql = "Select * From clientes";
+		public function table($tabla){
+			$sql = "Select * From " . $tabla;
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
   			//$return = $stmt->fetch();
@@ -60,8 +67,8 @@
 		}
 
 		//Funcion para retornar solo un registro de la tabla, esto se utilizara para la actualizacion de datos, como parametro se pasa el id del registro que se desea modificar
-		public function one_cliente($id){
-			$sql = "Select nombre,telefono,email From clientes where id='" . $id . "'";
+		public function one($id,$table){
+			$sql = "Select * From " . $table . " where id='" . $id . "'";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
   			$return = $stmt->fetch();
@@ -75,9 +82,23 @@
   			$stmt->execute();
 		}
 
+		//Funcion que actualizara los datos de la habitacion en el caso de que se actualice la imagen
+		public function update_habitacion_img($id,$tipo,$precio,$numero,$desc,$img){
+			$sql = "Update habitaciones set tipo='" . $tipo . "',precio='" . $precio . "',numero='" . $numero . "',descripcion='" . $desc . "',img='" . $img . "' Where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
+		//Funcion que actualizara los datos de la habitacion en el caso de que NO se actualice la imagen
+		public function update_habitacion($id,$tipo,$precio,$numero,$desc){
+			$sql = "Update habitaciones set tipo='" . $tipo . "',precio='" . $precio . "',numero='" . $numero . "',descripcion='" . $desc . "' Where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
 		//Funcion para eliminar un cliente en especifico, se pasa como parametro el id del cliente
-		public function delete_cliente($id){
-			$sql = "Delete from clientes Where id='" . $id . "'";
+		public function delete($id,$table){
+			$sql = "Delete from " . $table . " Where id='" . $id . "'";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
 		}

@@ -112,7 +112,7 @@
 																	<!-- Inicia el llenado de la tabla con datos -->
 																	<?php 
 																	//Se llama la funcion que retorna los datos de la tabla
-													                $listado = $db->table_cliente();
+													                $listado = $db->table("clientes");
 																	?>
 													                <tbody>
 																	<?php
