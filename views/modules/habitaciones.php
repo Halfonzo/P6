@@ -59,7 +59,7 @@
                         <div class="widget-group row no-gutters">
 
                             <!-- WIDGET 6 -->
-                            <div class="col-12 col-lg-7	 p-3">
+                            <div class="col-12 col-lg-9	 p-3">
 
                                 <div class="widget widget6 card">
 
@@ -105,6 +105,11 @@
 											        </th>
 											        <th class="secondary-text">
 											            <div class="table-header">
+											                <span class="column-title">Estado</span>
+											            </div>
+											        </th>
+											        <th class="secondary-text">
+											            <div class="table-header">
 											                <span class="column-title">Controles</span>
 											            </div>
 											        </th>
@@ -127,19 +132,23 @@
 														$t_tipo=$row[1];
 														$t_precio=$row[2];
 														$t_img=$row[6];
-														$t_des=$row[4]
+														$t_des=$row[4];
+														$t_est=$row[5];
 												?>
 													<tr>
 														<td><?php echo $t_id;?></td>
 								                        <td><?php echo $t_numero;?></td>
 								                        <td><?php echo $t_tipo;?></td>
 								                        <td><?php echo "$".$t_precio;?></td>
+								                        <td><?php echo $t_est;?></td>
 								                        <td>
-												        <a onclick="document.location.href='index.php?action=editarHabitacion&id=<?php echo $t_id ?>'"><i class="icon s-7 icon-pencil"></i></a>
+												        <a onclick="document.location.href='index.php?action=editarHabitacion&id=<?php echo $t_id ?>'"><i class="icon s-5 icon-pencil"></i></a>
 												        &nbsp;&nbsp;&nbsp;&nbsp;
-												        <a onclick="if(confirm('Se eliminara la habitacion')){document.location.href='index.php?action=eliminarHabitacion&id=<?php echo $t_id ?>'}"><i class="icon s-7 icon-key-remove"></i></a>
+												        <a onclick="if(confirm('Se eliminara la habitacion')){document.location.href='index.php?action=eliminarHabitacion&id=<?php echo $t_id ?>'}"><i class="icon s-5 icon-key-remove"></i></a>
 												        &nbsp;&nbsp;&nbsp;&nbsp;
-												        <a onclick="$('#imgs').attr('src','<?php echo $t_img ?>');document.getElementById('desm').innerHTML = '<?php echo $t_des ?>';"><i class="icon s-7 icon-eye"></i></a>
+												        <a onclick="$('#imgs').attr('src','<?php echo $t_img ?>');document.getElementById('desm').innerHTML = '<?php echo $t_des ?>';"><i class="icon s-5 icon-eye"></i></a>
+												        &nbsp;&nbsp;&nbsp;&nbsp;
+												        <a <?php if($t_est=="Ocupado"){ echo 'hidden';} ?> onclick="document.location.href='index.php?action=reservaciones&id=<?php echo $t_id ?>'"><i class="icon s-5 icon-arrow-right-drop-circle"></i></a>
 								                        </td>
 								                    </tr>	
 												<?php
@@ -182,7 +191,7 @@
                             </div>
                             <!-- / WIDGET 6 -->
                             <!-- WIDGET 6 -->
-                            <div class="col-12 col-lg-5	 p-3">
+                            <div class="col-12 col-lg-3	 p-3">
 
                             	<div class="card mb-3">
 								    <img id="imgs" class="card-img-top" src="assets/images/habitaciones/ojo.png" alt="Card image cap" height="270">

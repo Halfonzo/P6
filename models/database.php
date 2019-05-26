@@ -56,6 +56,18 @@
   			$stmt->execute();
 		}
 
+		//Funcion para realizar el registro de una nueva reservacion en la base de datos, se pasan los valores ingresados por parametro
+		public function create_reservacion($habitacion,$cliente,$fecha,$dias){
+			$sql = "Insert into reservaciones (id_cliente,id_habitacion,fecha,dias) values('" . $cliente ."','" . $habitacion . "','" . $fecha . "','" . $dias . "')";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+
+  			//Al reservar una habitacion se debe actualizar el estado de la habitacion seleccionada
+  			$sql = "Update habitaciones set estado='Ocupado' Where id='" . $habitacion . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
 		//Funcion para devolver todos los datos de una tabla en especifico, esto se mostraran en las tablas principales
 		//La tabla seleccionada es enviada por parametro
 		public function table($tabla){
@@ -101,6 +113,99 @@
 			$sql = "Delete from " . $table . " Where id='" . $id . "'";
 			$stmt = $this->con->prepare($sql);
   			$stmt->execute();
+		}
+
+		//Funcion especial para eliminar la reservacion y modificar el estado de la habitacion
+		public function delete_reservacion($id,$hab){
+			$sql = "Delete from reservaciones Where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+
+  			//Actualizamos la habitacion
+  			$sql = "Update habitaciones set estado='Disponible' where numero='" . $hab . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
+		//Funcion para recabar los datos y utilizar un Select2
+		public function select2(){
+			$sql = "Select id,numero From habitaciones where estado='Disponible'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			//$return = $stmt->fetch();
+  			return $stmt;
+		}
+
+		//Funcion para recabar los datos y utilizar un Select2
+		public function select2_user(){
+			$sql = "Select id,nombre From clientes";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			//$return = $stmt->fetch();
+  			return $stmt;
+		}
+
+		//Funcion especial para recavar los datos de la reservacion tomando datos de dstintas tablas
+		public function reser_especial(){
+			$sql = "SELECT id,(Select nombre from clientes where id=id_cliente)as cliente,(Select numero from habitaciones where id=id_habitacion)as numero, (Select tipo from habitaciones WHERE id=id_habitacion)as tipo, fecha, dias FROM reservaciones";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			//$return = $stmt->fetch();
+  			return $stmt;
+		}
+
+		//Funcion para modificar el registro de la reservacion, consulta datos de multiples tablas
+		public function edit_especial($id){
+			$sql = "SELECT (Select nombre from clientes where id=id_cliente)as cliente,(Select numero from habitaciones where id=id_habitacion)as numero, fecha, dias, (Select id from clientes where id=id_cliente)as id_cliente, (Select id from habitaciones where id=id_habitacion)as id_habitacion FROM reservaciones Where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			$return = $stmt->fetch();
+  			return $return;
+		}
+
+		//Funcion para actualizar los datos de la reservacion
+		public function update_especial($ida,$idn,$id,$habitacion,$cliente,$fecha,$dias){
+			//Caso especial para modificar el estado de la habitacion
+			$sql = "Update habitaciones set estado='Disponible' where id='" . $ida . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+
+  			//Se actualizan los datos de la nueva habitacion
+  			$sql = "Update habitaciones set estado='Ocupado' where id='" . $idn . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+
+  			//Se actualizan los datos de la tabla de reservaciones
+  			$sql = "Update reservaciones set id_cliente='" . $cliente . "', id_habitacion='" . $habitacion ."', fecha='" . $fecha . "',dias='" . $dias . "' where id='" . $id . "'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+		}
+
+		//Funcion para consultar las ganancias por el mes especificado
+		public function ganancias($fecha){
+			$sql = "SELECT ((SELECT precio from habitaciones WHERE id=id_habitacion)*dias)as ganancias FROM reservaciones WHERE fecha LIKE '%" . $fecha . "%'";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			//$return = $stmt->fetch();
+  			return $stmt;
+		}
+
+		//Funcion para calcular el numero de clientes de acurdo a sus visitas
+		public function visitas(){
+			$sql = "SELECT COUNT(id)as total, (SELECT COUNT(id) FROM clientes WHERE visitas>5)as habituales, (SELECT COUNT(id) FROM clientes WHERE visitas<=5)as esporadicos FROM clientes";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			$return = $stmt->fetch();
+  			return $return;
+		}
+
+		//Funcion para calcular el numero de hbaitaciones ocupadas y desocupadas
+		public function habit(){
+			$sql = "SELECT COUNT(id)as total, (SELECT COUNT(id) from habitaciones WHERE estado='Disponible') as disponible, (SELECT COUNT(id) from habitaciones WHERE estado='Ocupado') as ocupado FROM habitaciones";
+			$stmt = $this->con->prepare($sql);
+  			$stmt->execute();
+  			$return = $stmt->fetch();
+  			return $return;
 		}
 
 	}

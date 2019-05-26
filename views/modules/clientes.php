@@ -130,7 +130,7 @@
 													                        <td><?php echo $t_nombre;?></td>
 													                        <td><?php echo $t_telefono;?></td>
 													                        <td><?php echo $t_email;?></td>
-													                        <td><?php echo $t_visitas;?></td>
+													                        <td><?php if($t_visitas>5){echo 'Habitual';}else{echo 'Esporádico';}?></td>
 													                        <td>
 																	        <a onclick="document.location.href='index.php?action=editarCliente&id=<?php echo $t_id ?>'"><i class="icon s-7 icon-account-edit"></i></a>
 																	        &nbsp;&nbsp;&nbsp;&nbsp;
